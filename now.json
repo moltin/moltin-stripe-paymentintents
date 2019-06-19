@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "env": {
+    "MOLTIN_CLIENT_ID": "@demo-moltin-client-id",
+    "MOLTIN_CLIENT_SECRET": "@demo-moltin-client-secret",
+    "STRIPE_PUBLISHABLE_KEY": "@demo-stripe-publishable-test-key",
+    "STRIPE_SECRET_KEY": "@demo-stripe-secret-test-key"
+  },
+  "builds": [
+    {
+      "src": "app/package.json",
+      "use": "@now/next"
+    },
+    {
+      "src": "api/handlers/*.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/authorize/(?<orderId>[^/]+)",
+      "dest": "/api/handlers/authorize-order.js?orderId=$orderId",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/api/capture/(?<orderId>[^/]+)",
+      "dest": "/api/handlers/capture-order.js?orderId=$orderId",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/api/intent",
+      "dest": "/api/handlers/create-intent.js",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/app/$1"
+    }
+  ]
+}
