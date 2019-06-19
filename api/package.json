@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "dependencies": {
+    "@moltin/request": "^2.0.1",
+    "stripe": "^7.2.0"
+  }
+}
