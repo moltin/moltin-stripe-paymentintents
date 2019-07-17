@@ -25,13 +25,13 @@
   ],
   "routes": [
     {
-      "src": "/api/authorize/(?<orderId>[^/]+)",
-      "dest": "/api/handlers/authorize-order.js?orderId=$orderId",
+      "src": "/api/authorize",
+      "dest": "/api/handlers/authorize-order.js",
       "methods": ["POST"]
     },
     {
-      "src": "/api/capture/(?<orderId>[^/]+)",
-      "dest": "/api/handlers/capture-order.js?orderId=$orderId",
+      "src": "/api/capture",
+      "dest": "/api/handlers/capture-order.js",
       "methods": ["POST"]
     },
     {

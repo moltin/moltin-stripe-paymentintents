@@ -5,15 +5,24 @@ const moltin = new MoltinClient({
   client_secret: process.env.MOLTIN_CLIENT_SECRET
 })
 
-module.exports = async ({ query: { orderId } }, res) => {
+module.exports = async (
+  {
+    body: {
+      data: {
+        object: { metadata }
+      }
+    }
+  },
+  res
+) => {
   try {
     const {
-      data: [{ id: transactionId }]
-    } = await moltin.get(`orders/${orderId}/transactions`)
+      data: [{ id: transaction_id }]
+    } = await moltin.get(`orders/${metadata.order_id}/transactions`)
 
     res.send(
       await moltin.post(
-        `orders/${orderId}/transactions/${transactionId}/capture`
+        `orders/${metadata.order_id}/transactions/${transaction_id}/capture`
       )
     )
   } catch ({ status }) {
