@@ -1,4 +1,6 @@
 {
+  "name": "moltin-stripe-paymentintents",
+  "alias": "moltin-stripe-paymentintents",
   "version": 2,
   "env": {
     "MOLTIN_CLIENT_ID": "@demo-moltin-client-id",
