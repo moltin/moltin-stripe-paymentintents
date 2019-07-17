@@ -8,34 +8,19 @@ function CheckoutForm({ stripe }) {
 
   async function onSubmit() {
     try {
-      await fetch(
-        `${
-          process.env.API_HOST
-        }/authorize/c71c078c-da11-43f8-8bbb-3dae11a9cc1d`,
-        {
-          method: 'POST'
-        }
-      )
-      const stripePaymentIntent = await fetch(
-        `${process.env.API_HOST}/intent`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            amount: 9999,
-            currency: 'usd'
-          })
-        }
-      )
+      const order_id = '4b760a9e-29ef-4764-9b7e-2013931c3625'
+
+      const stripePaymentIntent = await fetch('/api/intent', {
+        method: 'POST',
+        body: JSON.stringify({
+          amount: 9999,
+          currency: 'usd',
+          order_id
+        })
+      })
       const { client_secret } = await stripePaymentIntent.json()
 
       await stripe.handleCardPayment(client_secret)
-
-      await fetch(
-        `${process.env.API_HOST}/capture/c71c078c-da11-43f8-8bbb-3dae11a9cc1d`,
-        {
-          method: 'POST'
-        }
-      )
     } catch (err) {
       setCheckoutError('There was a problem processing your order payment')
     }

@@ -4,10 +4,19 @@ const moltin = new MoltinClient({
   client_id: process.env.MOLTIN_CLIENT_ID
 })
 
-module.exports = async ({ query: { orderId } }, res) => {
+module.exports = async (
+  {
+    body: {
+      data: {
+        object: { metadata }
+      }
+    }
+  },
+  res
+) => {
   try {
     res.send(
-      await moltin.post(`orders/${orderId}/payments`, {
+      await moltin.post(`orders/${metadata.order_id}/payments`, {
         gateway: 'manual',
         method: 'authorize'
       })
