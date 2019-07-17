@@ -3,8 +3,13 @@
   "env": {
     "MOLTIN_CLIENT_ID": "@demo-moltin-client-id",
     "MOLTIN_CLIENT_SECRET": "@demo-moltin-client-secret",
-    "STRIPE_PUBLISHABLE_KEY": "@demo-stripe-publishable-test-key",
     "STRIPE_SECRET_KEY": "@demo-stripe-secret-test-key"
+  },
+  "build": {
+    "env": {
+      "MOLTIN_CLIENT_ID": "@demo-moltin-client-id",
+      "STRIPE_PUBLISHABLE_KEY": "@demo-stripe-publishable-test-key"
+    }
   },
   "builds": [
     {
