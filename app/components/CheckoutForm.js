@@ -7,61 +7,69 @@ import CartContext from '../context/CartContext'
 
 function CheckoutForm({ stripe }) {
   const {
-    addToCart,
+    addingToCart,
     cartAmount,
     cartCurrency,
     cartId,
     cartTotal,
-    checkoutCart,
-    productId
+    checkoutCart
   } = useContext(CartContext)
-  const [checkoutError, setCheckoutError] = useState(null)
 
   async function onSubmit() {
-    try {
-      const { order_id } = await checkoutCart({
-        cartId,
-        name: 'Jonathan Steele',
-        email: 'jonathan@moltin.com'
-      })
+    const { order_id } = await checkoutCart({
+      cartId,
+      name: 'Jonathan Steele',
+      email: 'jonathan@moltin.com'
+    })
 
-      const stripePaymentIntent = await fetch('/api/intent', {
-        method: 'POST',
-        body: JSON.stringify({
-          amount: cartAmount,
-          currency: cartCurrency,
-          order_id
-        })
+    const stripePaymentIntent = await fetch('/api/intent', {
+      method: 'POST',
+      body: JSON.stringify({
+        amount: cartAmount,
+        currency: cartCurrency,
+        order_id
       })
-      const { client_secret } = await stripePaymentIntent.json()
+    })
+    const { client_secret } = await stripePaymentIntent.json()
 
-      await stripe.handleCardPayment(client_secret)
-    } catch (err) {
-      setCheckoutError('There was a problem processing your order payment')
-    }
+    await stripe.handleCardPayment(client_secret)
   }
 
   return (
-    <React.Fragment>
-      {cartAmount}
-      {cartCurrency}
-      {cartTotal}
-      <button onClick={() => addToCart({ productId, quantity: 1 })}>Add</button>
-      <Form
-        onSubmit={onSubmit}
-        render={({ handleSubmit, submitting }) => {
+    <section className="bg-white p-2 rounded shadow">
+      <Form onSubmit={onSubmit}>
+        {({ handleSubmit, submitSucceeded, submitting }) => {
+          const disableButton = submitting || addingToCart || cartAmount === 0
+
           return (
-            <form onSubmit={handleSubmit}>
-              {checkoutError && checkoutError}
-              <CardElement />
-              <button type="submit" disabled={submitting}>
-                {submitting ? 'Submitting' : 'Submit'}
-              </button>
-            </form>
+            <React.Fragment>
+              {submitSucceeded ? (
+                <div className="my-4 text-gray-600 text-center">
+                  Thank you for your order!
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <div className="border mb-4 p-4 rounded">
+                    <CardElement disabled={disableButton} />
+                  </div>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+                    type="submit"
+                    disabled={disableButton}
+                  >
+                    {submitting
+                      ? 'Processing'
+                      : cartAmount === 0
+                      ? 'Cart empty'
+                      : `Confirm and pay ${cartTotal}`}
+                  </button>
+                </form>
+              )}
+            </React.Fragment>
           )
         }}
-      />
-    </React.Fragment>
+      </Form>
+    </section>
   )
 }
 
