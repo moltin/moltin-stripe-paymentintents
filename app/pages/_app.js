@@ -2,6 +2,7 @@ import App, { Container } from 'next/app'
 import Head from 'next/head'
 
 import StripeProvider from '../components/StripeProvider'
+import { MoltinProvider } from '../context/MoltinContext'
 
 class StripeApp extends App {
   render() {
@@ -12,9 +13,11 @@ class StripeApp extends App {
         <Head>
           <script id="stripe-js" src="https://js.stripe.com/v3/" async />
         </Head>
-        <StripeProvider>
-          <Component {...pageProps} />
-        </StripeProvider>
+        <MoltinProvider clientId={process.env.MOLTIN_CLIENT_ID}>
+          <StripeProvider>
+            <Component {...pageProps} />
+          </StripeProvider>
+        </MoltinProvider>
       </Container>
     )
   }
