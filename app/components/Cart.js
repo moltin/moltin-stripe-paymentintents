@@ -12,13 +12,16 @@ function Cart() {
       <header className="p-2">
         <h1 className="font-medium text-xl text-gray-800">Cart</h1>
       </header>
-      <div>
+      <div className="pb-4">
         {addingToCart ? (
-          <div className="mb-4 text-gray-600 text-center">Updating cart</div>
+          <div className="text-gray-600 text-center">Updating cart</div>
         ) : cartItems ? (
-          cartItems.map(item => (
+          cartItems.map((item, index) => (
             <React.Fragment key={item.id}>
-              <div className="flex items-center mb-4 px-2">
+              <div
+                className={`flex items-center px-2 ${index ===
+                  cartItems.length && 'mb-4'}`}
+              >
                 <img src={item.image.href} className="h-12 w-12" />
                 <div className="flex flex-auto flex-col">
                   <p>{item.name}</p>
@@ -31,18 +34,19 @@ function Cart() {
             </React.Fragment>
           ))
         ) : (
-          <div className="mb-4 text-gray-600 text-center">Cart is empty</div>
+          <div className="text-gray-600 text-center">Cart is empty</div>
         )}
       </div>
-      <footer className="border-t-2 p-2">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
-          onClick={() => addToCart({ productId, quantity: 1 })}
-          disabled={addingToCart}
-        >
-          Add to cart
-        </button>
-      </footer>
+      {!addingToCart && (
+        <footer className="border-t-2 p-2">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+            onClick={() => addToCart({ productId, quantity: 1 })}
+          >
+            Add to cart
+          </button>
+        </footer>
+      )}
     </section>
   )
 }

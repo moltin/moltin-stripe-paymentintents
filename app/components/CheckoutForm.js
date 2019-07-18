@@ -37,6 +37,9 @@ function CheckoutForm({ stripe }) {
 
   return (
     <section className="bg-white p-2 rounded shadow">
+      <header className="mb-4">
+        <h1 className="font-medium text-xl text-gray-800">Checkout</h1>
+      </header>
       <Form onSubmit={onSubmit}>
         {({ handleSubmit, submitSucceeded, submitting }) => {
           const disableButton = submitting || addingToCart || cartAmount === 0
@@ -60,8 +63,8 @@ function CheckoutForm({ stripe }) {
                     {submitting
                       ? 'Processing'
                       : cartAmount === 0
-                      ? 'Cart empty'
-                      : `Confirm and pay ${cartTotal}`}
+                      ? 'Cart is empty'
+                      : `Checkout and pay ${cartTotal}`}
                   </button>
                 </form>
               )}
