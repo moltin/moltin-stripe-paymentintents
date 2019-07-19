@@ -16,6 +16,7 @@ function CheckoutForm({ stripe }) {
     checkingOutCart,
     resetCart
   } = useContext(CartContext)
+  const [cardElement, setCardElement] = useState(null)
 
   async function onSubmit({ name, email }) {
     const { order_id } = await checkoutCart({
@@ -37,6 +38,7 @@ function CheckoutForm({ stripe }) {
     await stripe.handleCardPayment(client_secret)
 
     resetCart()
+    cardElement.clear()
   }
 
   return (
@@ -143,6 +145,7 @@ function CheckoutForm({ stripe }) {
                       </label>
                       <CardElement
                         onChange={onStripeChange}
+                        onReady={el => setCardElement(el)}
                         disabled={disableButton}
                         hidePostalCode={true}
                         className={`border-2 mb-2 px-2 py-4 rounded ${
