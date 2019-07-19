@@ -12,7 +12,8 @@ function CheckoutForm({ stripe }) {
     cartCurrency,
     cartId,
     cartTotal,
-    checkoutCart
+    checkoutCart,
+    resetCart
   } = useContext(CartContext)
 
   async function onSubmit({ name, email }) {
@@ -33,6 +34,8 @@ function CheckoutForm({ stripe }) {
     const { client_secret } = await stripePaymentIntent.json()
 
     await stripe.handleCardPayment(client_secret)
+
+    resetCart()
   }
 
   return (
