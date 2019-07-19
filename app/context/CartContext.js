@@ -15,8 +15,9 @@ const { Provider } = (CartContext = createContext())
 
 const initialCart = {
   addingToCart: false,
-  cartCurrency: 'USD',
   cartAmount: 0,
+  cartCurrency: 'USD',
+  cartItems: null,
   cartTotal: 0,
   checkingOutCart: false
 }
@@ -56,9 +57,7 @@ function cartReducer(cart, { payload, type }) {
       }
 
     case 'RESET_CART':
-      return {
-        initialCart
-      }
+      return initialCart
 
     default:
       return cart
