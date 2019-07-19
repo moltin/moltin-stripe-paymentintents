@@ -10,10 +10,10 @@ function CheckoutForm({ stripe }) {
     addingToCart,
     cartAmount,
     cartCurrency,
-    cartDispatch,
     cartId,
     cartTotal,
-    checkoutCart
+    checkoutCart,
+    resetCart
   } = useContext(CartContext)
 
   async function onSubmit({ name, email }) {
@@ -35,7 +35,7 @@ function CheckoutForm({ stripe }) {
 
     await stripe.handleCardPayment(client_secret)
 
-    cartDispatch({ type: 'RESET_CART' })
+    resetCart()
   }
 
   return (

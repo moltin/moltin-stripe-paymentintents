@@ -68,6 +68,10 @@ function CartProvider({ children }) {
     getProduct()
   }, [])
 
+  function resetCart() {
+    cartDispatch({ type: 'RESET_CART' })
+  }
+
   async function getProduct() {
     const {
       data: [{ id }]
@@ -120,10 +124,10 @@ function CartProvider({ children }) {
       value={{
         ...cart,
         addToCart,
-        cartDispatch,
         cartId,
         checkoutCart,
-        productId
+        productId,
+        resetCart
       }}
     >
       {children}
