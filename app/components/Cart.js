@@ -38,7 +38,7 @@ function Cart() {
         )}
       </div>
       {!addingToCart && (
-        <footer className="border-t-2 p-2">
+        <footer className="border-gray-300 border-t-2 p-2">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
             onClick={() => addToCart({ productId, quantity: 1 })}

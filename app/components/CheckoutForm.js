@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Form } from 'react-final-form'
+import { Field, Form } from 'react-final-form'
 import { CardElement, injectStripe } from 'react-stripe-elements'
 import fetch from 'isomorphic-unfetch'
 
@@ -40,9 +40,25 @@ function CheckoutForm({ stripe }) {
       <header className="mb-4">
         <h1 className="font-medium text-xl text-gray-800">Checkout</h1>
       </header>
-      <Form onSubmit={onSubmit}>
-        {({ handleSubmit, submitSucceeded, submitting }) => {
+      <Form
+        onSubmit={onSubmit}
+        validate={values => {
+          const errors = {}
+
+          if (!values.stripe || !values.stripe.complete) {
+            if (!errors.stripe) {
+              errors.stripe = {}
+            }
+
+            errors.stripe.complete = 'Required'
+          }
+
+          return errors
+        }}
+      >
+        {({ form, handleSubmit, submitSucceeded, submitting }) => {
           const disableButton = submitting || addingToCart || cartAmount === 0
+          const onStripeChange = e => form.change('stripe', e)
 
           return (
             <React.Fragment>
@@ -52,8 +68,26 @@ function CheckoutForm({ stripe }) {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <div className="border mb-4 p-4 rounded">
-                    <CardElement disabled={disableButton} />
+                  <div className="">
+                    <Field name="stripe">
+                      {({ meta }) => (
+                        <React.Fragment>
+                          <label className="block font-medium mb-4 text-sm">
+                            Card details
+                          </label>
+                          <CardElement
+                            onChange={onStripeChange}
+                            disabled={disableButton}
+                            hidePostalCode={true}
+                            className={`border-2 mb-4 p-4 rounded ${
+                              meta.error && meta.touched
+                                ? 'border-red-400'
+                                : 'border-gray-300'
+                            }`}
+                          />
+                        </React.Fragment>
+                      )}
+                    </Field>
                   </div>
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
