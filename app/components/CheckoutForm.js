@@ -45,12 +45,16 @@ function CheckoutForm({ stripe }) {
         validate={values => {
           const errors = {}
 
+          if (!values.email) errors.email = 'Email address is required'
+
+          if (!values.name) errors.name = 'Name is required'
+
           if (!values.stripe || !values.stripe.complete) {
             if (!errors.stripe) {
               errors.stripe = {}
             }
 
-            errors.stripe.complete = 'Required'
+            errors.stripe.complete = 'Payment details are required'
           }
 
           return errors
@@ -68,27 +72,78 @@ function CheckoutForm({ stripe }) {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <div className="">
-                    <Field name="stripe">
-                      {({ meta }) => (
-                        <React.Fragment>
-                          <label className="block font-medium mb-4 text-sm">
-                            Card details
+                  <div className="flex -mx-2">
+                    <Field name="name">
+                      {({ input, meta }) => (
+                        <div className="flex flex-col mb-4 px-2 w-1/2">
+                          <label className="block font-medium mb-2 text-sm">
+                            Name
                           </label>
-                          <CardElement
-                            onChange={onStripeChange}
-                            disabled={disableButton}
-                            hidePostalCode={true}
-                            className={`border-2 mb-4 p-4 rounded ${
+                          <input
+                            {...input}
+                            type="text"
+                            className={`border-2 mb-2 p-2 rounded ${
                               meta.error && meta.touched
                                 ? 'border-red-400'
                                 : 'border-gray-300'
                             }`}
                           />
-                        </React.Fragment>
+                          {meta.error && meta.touched && (
+                            <span className="text-red-400 text-sm">
+                              {meta.error}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </Field>
+                    <Field name="email">
+                      {({ input, meta }) => (
+                        <div className="flex flex-col mb-4 px-2 w-1/2">
+                          <label className="block font-medium mb-2 text-sm">
+                            Email address
+                          </label>
+                          <input
+                            {...input}
+                            type="email"
+                            className={`border-2 mb-2 p-2 rounded ${
+                              meta.error && meta.touched
+                                ? 'border-red-400'
+                                : 'border-gray-300'
+                            }`}
+                          />
+                          {meta.error && meta.touched && (
+                            <span className="text-red-400 text-sm">
+                              {meta.error}
+                            </span>
+                          )}
+                        </div>
                       )}
                     </Field>
                   </div>
+                  <Field name="stripe">
+                    {({ meta }) => (
+                      <div className="mb-4">
+                        <label className="block font-medium mb-2 text-sm">
+                          Card details
+                        </label>
+                        <CardElement
+                          onChange={onStripeChange}
+                          disabled={disableButton}
+                          hidePostalCode={true}
+                          className={`border-2 mb-2 px-2 py-4 rounded ${
+                            meta.error && meta.touched
+                              ? 'border-red-400'
+                              : 'border-gray-300'
+                          }`}
+                        />
+                        {meta.error && meta.touched && (
+                          <span className="text-red-400 text-sm">
+                            {meta.error.complete}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </Field>
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
                     type="submit"
