@@ -3,9 +3,15 @@ import React, { useContext } from 'react'
 import CartContext from '../context/CartContext'
 
 function Cart() {
-  const { addToCart, addingToCart, cartItems, productId } = useContext(
-    CartContext
-  )
+  const {
+    addToCart,
+    addingToCart,
+    cartItems,
+    checkingOutCart,
+    productId
+  } = useContext(CartContext)
+
+  const showAddToCart = !addingToCart && !checkingOutCart
 
   return (
     <section className="bg-white rounded shadow">
@@ -38,7 +44,7 @@ function Cart() {
           <div className="text-gray-600 text-center">Cart is empty</div>
         )}
       </div>
-      {!addingToCart && (
+      {showAddToCart && (
         <footer className="border-gray-300 border-t-2 p-2">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"

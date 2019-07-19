@@ -15,9 +15,11 @@ const { Provider } = (CartContext = createContext())
 
 const initialCart = {
   addingToCart: false,
-  cartCurrency: 'USD',
   cartAmount: 0,
-  cartTotal: 0
+  cartCurrency: 'USD',
+  cartItems: null,
+  cartTotal: 0,
+  checkingOutCart: false
 }
 
 function cartReducer(cart, { payload, type }) {
@@ -26,6 +28,12 @@ function cartReducer(cart, { payload, type }) {
       return {
         ...cart,
         addingToCart: true
+      }
+
+    case 'CHECKOUT_CART':
+      return {
+        ...cart,
+        checkingOutCart: true
       }
 
     case 'SET_CART':
@@ -49,9 +57,7 @@ function cartReducer(cart, { payload, type }) {
       }
 
     case 'RESET_CART':
-      return {
-        initialCart
-      }
+      return initialCart
 
     default:
       return cart
@@ -93,6 +99,8 @@ function CartProvider({ children }) {
   }
 
   async function checkoutCart({ cartId, name, email }) {
+    cartDispatch({ type: 'CHECKOUT_CART' })
+
     const postalAddress = {
       first_name: 'Jonathan',
       last_name: 'Steele',
