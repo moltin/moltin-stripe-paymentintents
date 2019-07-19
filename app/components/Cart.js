@@ -19,8 +19,9 @@ function Cart() {
           cartItems.map((item, index) => (
             <React.Fragment key={item.id}>
               <div
-                className={`flex items-center px-2 ${index ===
-                  cartItems.length && 'mb-4'}`}
+                className={`flex items-center px-2 ${
+                  index === cartItems.length - 1 ? 'mb-0' : 'mb-4'
+                }`}
               >
                 <img src={item.image.href} className="h-12 w-12" />
                 <div className="flex flex-auto flex-col">
