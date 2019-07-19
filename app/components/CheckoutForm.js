@@ -13,6 +13,7 @@ function CheckoutForm({ stripe }) {
     cartId,
     cartTotal,
     checkoutCart,
+    checkingOutCart,
     resetCart
   } = useContext(CartContext)
 
@@ -63,8 +64,9 @@ function CheckoutForm({ stripe }) {
           return errors
         }}
       >
-        {({ form, handleSubmit, submitSucceeded, submitting }) => {
-          const disableButton = submitting || addingToCart || cartAmount === 0
+        {({ form, handleSubmit, submitSucceeded }) => {
+          const disableButton =
+            checkingOutCart || addingToCart || cartAmount === 0
           const onStripeChange = e => form.change('stripe', e)
 
           return (
@@ -85,13 +87,13 @@ function CheckoutForm({ stripe }) {
                           <input
                             {...input}
                             type="text"
-                            disabled={submitting || addingToCart}
+                            disabled={checkingOutCart || addingToCart}
                             className={`border-2 mb-2 p-2 rounded ${
                               meta.error && meta.touched
                                 ? 'border-red-400'
                                 : 'border-gray-300'
                             } ${
-                              submitting || addingToCart
+                              checkingOutCart || addingToCart
                                 ? 'opacity-50'
                                 : 'opacity-100'
                             }`}
@@ -113,13 +115,13 @@ function CheckoutForm({ stripe }) {
                           <input
                             {...input}
                             type="email"
-                            disabled={submitting || addingToCart}
+                            disabled={checkingOutCart || addingToCart}
                             className={`border-2 mb-2 p-2 rounded ${
                               meta.error && meta.touched
                                 ? 'border-red-400'
                                 : 'border-gray-300'
                             } ${
-                              submitting || addingToCart
+                              checkingOutCart || addingToCart
                                 ? 'opacity-50'
                                 : 'opacity-100'
                             }`}
@@ -166,7 +168,7 @@ function CheckoutForm({ stripe }) {
                     type="submit"
                     disabled={disableButton}
                   >
-                    {submitting
+                    {checkingOutCart
                       ? 'Processing'
                       : addingToCart
                       ? 'Updating cart'
