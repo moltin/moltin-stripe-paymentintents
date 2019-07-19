@@ -13,6 +13,13 @@ let CartContext
 
 const { Provider } = (CartContext = createContext())
 
+const initialCart = {
+  addingToCart: false,
+  cartCurrency: 'USD',
+  cartAmount: 0,
+  cartTotal: 0
+}
+
 function cartReducer(cart, { payload, type }) {
   switch (type) {
     case 'ADD_TO_CART':
@@ -41,6 +48,11 @@ function cartReducer(cart, { payload, type }) {
         cartTotal
       }
 
+    case 'RESET_CART':
+      return {
+        initialCart
+      }
+
     default:
       return cart
   }
@@ -48,12 +60,7 @@ function cartReducer(cart, { payload, type }) {
 
 function CartProvider({ children }) {
   const { moltin } = useContext(MoltinContext)
-  const [cart, cartDispatch] = useReducer(cartReducer, {
-    addingToCart: false,
-    cartCurrency: 'USD',
-    cartAmount: 0,
-    cartTotal: 0
-  })
+  const [cart, cartDispatch] = useReducer(cartReducer, initialCart)
   const [productId, setProductId] = useState(null)
   const [cartId] = useState(createCartIdentifier())
 
@@ -113,6 +120,7 @@ function CartProvider({ children }) {
       value={{
         ...cart,
         addToCart,
+        cartDispatch,
         cartId,
         checkoutCart,
         productId

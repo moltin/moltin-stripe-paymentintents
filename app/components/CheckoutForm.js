@@ -10,6 +10,7 @@ function CheckoutForm({ stripe }) {
     addingToCart,
     cartAmount,
     cartCurrency,
+    cartDispatch,
     cartId,
     cartTotal,
     checkoutCart
@@ -33,6 +34,8 @@ function CheckoutForm({ stripe }) {
     const { client_secret } = await stripePaymentIntent.json()
 
     await stripe.handleCardPayment(client_secret)
+
+    cartDispatch({ type: 'RESET_CART' })
   }
 
   return (
