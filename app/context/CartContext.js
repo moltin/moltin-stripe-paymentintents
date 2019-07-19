@@ -68,7 +68,7 @@ function CartProvider({ children }) {
   const { moltin } = useContext(MoltinContext)
   const [cart, cartDispatch] = useReducer(cartReducer, initialCart)
   const [productId, setProductId] = useState(null)
-  const [cartId] = useState(createCartIdentifier())
+  const [cartId, setCartId] = useState(createCartIdentifier())
 
   useEffect(() => {
     getProduct()
@@ -76,6 +76,8 @@ function CartProvider({ children }) {
 
   function resetCart() {
     cartDispatch({ type: 'RESET_CART' })
+
+    setCartId(createCartIdentifier())
   }
 
   async function getProduct() {
