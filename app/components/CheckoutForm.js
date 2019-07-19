@@ -82,11 +82,12 @@ function CheckoutForm({ stripe }) {
                           <input
                             {...input}
                             type="text"
+                            disabled={disableButton}
                             className={`border-2 mb-2 p-2 rounded ${
                               meta.error && meta.touched
                                 ? 'border-red-400'
                                 : 'border-gray-300'
-                            }`}
+                            } ${disableButton ? 'opacity-50' : 'opacity-100'}`}
                           />
                           {meta.error && meta.touched && (
                             <span className="text-red-400 text-sm">
@@ -105,11 +106,12 @@ function CheckoutForm({ stripe }) {
                           <input
                             {...input}
                             type="email"
+                            disabled={disableButton}
                             className={`border-2 mb-2 p-2 rounded ${
                               meta.error && meta.touched
                                 ? 'border-red-400'
                                 : 'border-gray-300'
-                            }`}
+                            } ${disableButton ? 'opacity-50' : 'opacity-100'}`}
                           />
                           {meta.error && meta.touched && (
                             <span className="text-red-400 text-sm">
