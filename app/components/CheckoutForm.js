@@ -82,12 +82,16 @@ function CheckoutForm({ stripe }) {
                           <input
                             {...input}
                             type="text"
-                            disabled={disableButton}
+                            disabled={submitting || addingToCart}
                             className={`border-2 mb-2 p-2 rounded ${
                               meta.error && meta.touched
                                 ? 'border-red-400'
                                 : 'border-gray-300'
-                            } ${disableButton ? 'opacity-50' : 'opacity-100'}`}
+                            } ${
+                              submitting || addingToCart
+                                ? 'opacity-50'
+                                : 'opacity-100'
+                            }`}
                           />
                           {meta.error && meta.touched && (
                             <span className="text-red-400 text-sm">
@@ -106,12 +110,16 @@ function CheckoutForm({ stripe }) {
                           <input
                             {...input}
                             type="email"
-                            disabled={disableButton}
+                            disabled={submitting || addingToCart}
                             className={`border-2 mb-2 p-2 rounded ${
                               meta.error && meta.touched
                                 ? 'border-red-400'
                                 : 'border-gray-300'
-                            } ${disableButton ? 'opacity-50' : 'opacity-100'}`}
+                            } ${
+                              submitting || addingToCart
+                                ? 'opacity-50'
+                                : 'opacity-100'
+                            }`}
                           />
                           {meta.error && meta.touched && (
                             <span className="text-red-400 text-sm">
@@ -147,12 +155,18 @@ function CheckoutForm({ stripe }) {
                     )}
                   </Field>
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+                    className={`bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded w-full ${
+                      disableButton
+                        ? 'cursor-not-allowed opacity-50'
+                        : 'opacity-100'
+                    }`}
                     type="submit"
                     disabled={disableButton}
                   >
                     {submitting
                       ? 'Processing'
+                      : addingToCart
+                      ? 'Updating cart'
                       : cartAmount === 0
                       ? 'Cart is empty'
                       : `Checkout and pay ${cartTotal}`}
