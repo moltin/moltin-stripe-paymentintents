@@ -15,11 +15,11 @@ function CheckoutForm({ stripe }) {
     checkoutCart
   } = useContext(CartContext)
 
-  async function onSubmit() {
+  async function onSubmit({ name, email }) {
     const { order_id } = await checkoutCart({
       cartId,
-      name: 'Jonathan Steele',
-      email: 'jonathan@moltin.com'
+      name,
+      email
     })
 
     const stripePaymentIntent = await fetch('/api/intent', {
