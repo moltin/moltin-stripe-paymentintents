@@ -13,14 +13,14 @@ let CartContext
 
 const { Provider } = (CartContext = createContext())
 
-const initialState = {
-  cartCurrency: 'USD',
-  cartAmount: 0,
-  cartTotal: 0
-}
-
 function cartReducer(cart, { payload, type }) {
   switch (type) {
+    case 'ADD_TO_CART':
+      return {
+        ...cart,
+        addingToCart: true
+      }
+
     case 'SET_CART':
       const { data: items, meta } = payload
 
@@ -34,6 +34,7 @@ function cartReducer(cart, { payload, type }) {
 
       return {
         ...cart,
+        addingToCart: false,
         cartAmount,
         cartCurrency,
         cartItems,
@@ -47,7 +48,12 @@ function cartReducer(cart, { payload, type }) {
 
 function CartProvider({ children }) {
   const { moltin } = useContext(MoltinContext)
-  const [cart, cartDispatch] = useReducer(cartReducer, initialState)
+  const [cart, cartDispatch] = useReducer(cartReducer, {
+    addingToCart: false,
+    cartCurrency: 'USD',
+    cartAmount: 0,
+    cartTotal: 0
+  })
   const [productId, setProductId] = useState(null)
   const [cartId] = useState(createCartIdentifier())
 
@@ -64,6 +70,8 @@ function CartProvider({ children }) {
   }
 
   async function addToCart({ productId: id, quantity }) {
+    cartDispatch({ type: 'ADD_TO_CART' })
+
     const payload = await moltin.post(`carts/${cartId}/items`, {
       type: 'cart_item',
       id,
@@ -101,7 +109,15 @@ function CartProvider({ children }) {
   }
 
   return (
-    <Provider value={{ ...cart, addToCart, cartId, checkoutCart, productId }}>
+    <Provider
+      value={{
+        ...cart,
+        addToCart,
+        cartId,
+        checkoutCart,
+        productId
+      }}
+    >
       {children}
     </Provider>
   )
