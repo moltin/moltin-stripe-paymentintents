@@ -129,6 +129,28 @@ function CartProvider({ children }) {
     return { order_id: id }
   }
 
+  async function payForOrder({ orderId, payment }) {
+    const {
+      data: { client_secret, id: transaction_id }
+    } = await moltin.post(`orders/${orderId}/payments`, {
+      gateway: 'stripe_payment_intents',
+      method: 'purchase',
+      payment
+    })
+
+    return { client_secret, transaction_id }
+  }
+
+  async function confirmTransaction({ orderId, payment, transactionId }) {
+    await moltin.post(
+      `orders/${orderId}/transactions/${transactionId}/confirm`,
+      {
+        payment,
+        gateway: 'stripe_payment_intents'
+      }
+    )
+  }
+
   return (
     <Provider
       value={{
@@ -136,6 +158,8 @@ function CartProvider({ children }) {
         addToCart,
         cartId,
         checkoutCart,
+        confirmTransaction,
+        payForOrder,
         productId,
         resetCart
       }}

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Field, Form } from 'react-final-form'
 import { CardElement, injectStripe } from 'react-stripe-elements'
-import fetch from 'isomorphic-unfetch'
 
 import CartContext from '../context/CartContext'
 
@@ -9,36 +8,46 @@ function CheckoutForm({ stripe }) {
   const {
     addingToCart,
     cartAmount,
-    cartCurrency,
     cartId,
     cartTotal,
     checkoutCart,
     checkingOutCart,
+    confirmTransaction,
+    payForOrder,
     resetCart
   } = useContext(CartContext)
   const [cardElement, setCardElement] = useState(null)
 
   async function onSubmit({ name, email }) {
-    const { order_id } = await checkoutCart({
-      cartId,
-      name,
-      email
-    })
+    try {
+      const {
+        paymentMethod: { id: payment }
+      } = await stripe.createPaymentMethod('card')
 
-    const stripePaymentIntent = await fetch('/api/intent', {
-      method: 'POST',
-      body: JSON.stringify({
-        amount: cartAmount,
-        currency: cartCurrency,
-        order_id
+      const { order_id } = await checkoutCart({
+        cartId,
+        name,
+        email
       })
-    })
-    const { client_secret } = await stripePaymentIntent.json()
 
-    await stripe.handleCardPayment(client_secret)
+      const { client_secret, transaction_id } = await payForOrder({
+        orderId: order_id,
+        payment
+      })
 
-    resetCart()
-    cardElement.clear()
+      await stripe.handleCardAction(client_secret)
+
+      await confirmTransaction({
+        orderId: order_id,
+        payment,
+        transactionId: transaction_id
+      })
+
+      resetCart()
+      cardElement.clear()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
