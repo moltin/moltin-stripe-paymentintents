@@ -17,6 +17,7 @@ function CheckoutForm({ stripe }) {
     resetCart
   } = useContext(CartContext)
   const [cardElement, setCardElement] = useState(null)
+  const [checkoutError, setCheckoutError] = useState(null)
 
   async function onSubmit({ name, email }) {
     try {
@@ -57,8 +58,11 @@ function CheckoutForm({ stripe }) {
 
       resetCart()
       cardElement.clear()
-    } catch (error) {
-      console.log(error)
+    } catch ({
+      status = 400,
+      detail = 'There was a problem processing your order'
+    }) {
+      setCheckoutError(detail)
     }
   }
 
@@ -94,6 +98,11 @@ function CheckoutForm({ stripe }) {
 
           return (
             <React.Fragment>
+              {checkoutError && (
+                <div className="bg-red-200 border border-red-300 my-4 p-2 rounded text-center text-red-600 text-sm">
+                  {checkoutError}
+                </div>
+              )}
               {submitSucceeded && (
                 <div className="bg-green-200 border border-green-300 my-4 p-2 rounded text-center text-green-600 text-sm">
                   Thank you for your order!
