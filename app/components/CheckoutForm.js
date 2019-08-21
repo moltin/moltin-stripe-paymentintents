@@ -30,12 +30,24 @@ function CheckoutForm({ stripe }) {
         email
       })
 
-      const { client_secret, transaction_id } = await payForOrder({
+      const {
+        client_secret,
+        payment_intent_status,
+        transaction_id
+      } = await payForOrder({
         orderId: order_id,
         payment
       })
 
-      await stripe.handleCardAction(client_secret)
+      if (payment_intent_status === 'requires_action') {
+        const { error } = await stripe.handleCardAction(client_secret)
+
+        if (error)
+          throw {
+            status: 401,
+            detail: 'Payment authentication failed. Please check and try again'
+          }
+      }
 
       await confirmTransaction({
         orderId: order_id,
