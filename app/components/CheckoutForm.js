@@ -11,16 +11,21 @@ function CheckoutForm({ stripe }) {
     cartId,
     cartTotal,
     checkoutCart,
+    checkoutComplete,
+    checkoutError,
+    checkoutFailed,
+    checkoutProcessing,
+    checkoutSuccess,
     checkingOutCart,
     confirmTransaction,
-    payForOrder,
-    resetCart
+    payForOrder
   } = useContext(CartContext)
   const [cardElement, setCardElement] = useState(null)
-  const [checkoutError, setCheckoutError] = useState(null)
 
   async function onSubmit({ name, email }) {
     try {
+      checkoutProcessing()
+
       const {
         paymentMethod: { id: payment }
       } = await stripe.createPaymentMethod('card')
@@ -56,13 +61,13 @@ function CheckoutForm({ stripe }) {
         transactionId: transaction_id
       })
 
-      resetCart()
+      checkoutComplete()
       cardElement.clear()
     } catch ({
       status = 400,
       detail = 'There was a problem processing your order'
     }) {
-      setCheckoutError(detail)
+      checkoutFailed(detail)
     }
   }
 
@@ -91,7 +96,7 @@ function CheckoutForm({ stripe }) {
           return errors
         }}
       >
-        {({ form, handleSubmit, submitSucceeded }) => {
+        {({ form, handleSubmit }) => {
           const disableButton =
             checkingOutCart || addingToCart || cartAmount === 0
           const onStripeChange = e => form.change('stripe', e)
@@ -103,7 +108,7 @@ function CheckoutForm({ stripe }) {
                   {checkoutError}
                 </div>
               )}
-              {submitSucceeded && (
+              {checkoutSuccess && (
                 <div className="bg-green-200 border border-green-300 my-4 p-2 rounded text-center text-green-600 text-sm">
                   Thank you for your order!
                 </div>

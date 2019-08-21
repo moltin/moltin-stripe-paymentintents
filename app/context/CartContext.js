@@ -19,7 +19,9 @@ const initialCart = {
   cartCurrency: 'USD',
   cartItems: null,
   cartTotal: 0,
-  checkingOutCart: false
+  checkingOutCart: false,
+  checkoutError: null,
+  checkoutSuccess: false
 }
 
 function cartReducer(cart, { payload, type }) {
@@ -56,8 +58,19 @@ function cartReducer(cart, { payload, type }) {
         cartTotal
       }
 
-    case 'RESET_CART':
-      return initialCart
+    case 'CHECKOUT_SUCCESS':
+      return {
+        ...initialCart,
+        checkoutSuccess: true
+      }
+
+    case 'CHECKOUT_ERROR':
+      return {
+        ...cart,
+        checkingOutCart: false,
+        checkoutSuccess: false,
+        checkoutError: payload.error
+      }
 
     default:
       return cart
@@ -74,10 +87,18 @@ function CartProvider({ children }) {
     getProduct()
   }, [])
 
-  function resetCart() {
-    cartDispatch({ type: 'RESET_CART' })
+  function checkoutComplete() {
+    cartDispatch({ type: 'CHECKOUT_SUCCESS' })
 
     setCartId(createCartIdentifier())
+  }
+
+  function checkoutFailed(error) {
+    cartDispatch({ type: 'CHECKOUT_ERROR', payload: { error } })
+  }
+
+  function checkoutProcessing() {
+    cartDispatch({ type: 'CHECKOUT_CART' })
   }
 
   async function getProduct() {
@@ -101,8 +122,6 @@ function CartProvider({ children }) {
   }
 
   async function checkoutCart({ cartId, name, email }) {
-    cartDispatch({ type: 'CHECKOUT_CART' })
-
     const postalAddress = {
       first_name: 'Jonathan',
       last_name: 'Steele',
@@ -158,10 +177,12 @@ function CartProvider({ children }) {
         addToCart,
         cartId,
         checkoutCart,
+        checkoutComplete,
+        checkoutFailed,
+        checkoutProcessing,
         confirmTransaction,
         payForOrder,
-        productId,
-        resetCart
+        productId
       }}
     >
       {children}
