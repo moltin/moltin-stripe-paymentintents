@@ -1,9 +1,0 @@
-{
-  "private": true,
-  "name": "api",
-  "version": "1.0.0",
-  "dependencies": {
-    "@moltin/request": "2.0.2",
-    "stripe": "7.4.0"
-  }
-}

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Field, Form } from 'react-final-form'
 import { CardElement, injectStripe } from 'react-stripe-elements'
-import fetch from 'isomorphic-unfetch'
 
 import CartContext from '../context/CartContext'
 
@@ -9,36 +8,67 @@ function CheckoutForm({ stripe }) {
   const {
     addingToCart,
     cartAmount,
-    cartCurrency,
     cartId,
     cartTotal,
     checkoutCart,
+    checkoutComplete,
+    checkoutError,
+    checkoutFailed,
+    checkoutProcessing,
+    checkoutSuccess,
     checkingOutCart,
-    resetCart
+    confirmTransaction,
+    payForOrder
   } = useContext(CartContext)
   const [cardElement, setCardElement] = useState(null)
 
   async function onSubmit({ name, email }) {
-    const { order_id } = await checkoutCart({
-      cartId,
-      name,
-      email
-    })
+    try {
+      checkoutProcessing()
 
-    const stripePaymentIntent = await fetch('/api/intent', {
-      method: 'POST',
-      body: JSON.stringify({
-        amount: cartAmount,
-        currency: cartCurrency,
-        order_id
+      const {
+        paymentMethod: { id: payment }
+      } = await stripe.createPaymentMethod('card')
+
+      const { order_id } = await checkoutCart({
+        cartId,
+        name,
+        email
       })
-    })
-    const { client_secret } = await stripePaymentIntent.json()
 
-    await stripe.handleCardPayment(client_secret)
+      const {
+        client_secret,
+        payment_intent_status,
+        transaction_id
+      } = await payForOrder({
+        orderId: order_id,
+        payment
+      })
 
-    resetCart()
-    cardElement.clear()
+      if (payment_intent_status === 'requires_action') {
+        const { error } = await stripe.handleCardAction(client_secret)
+
+        if (error)
+          throw {
+            status: 401,
+            detail: 'Payment authentication failed. Please check and try again'
+          }
+      }
+
+      await confirmTransaction({
+        orderId: order_id,
+        payment,
+        transactionId: transaction_id
+      })
+
+      checkoutComplete()
+      cardElement.clear()
+    } catch ({
+      status = 400,
+      detail = 'There was a problem processing your order'
+    }) {
+      checkoutFailed(detail)
+    }
   }
 
   return (
@@ -66,14 +96,19 @@ function CheckoutForm({ stripe }) {
           return errors
         }}
       >
-        {({ form, handleSubmit, submitSucceeded }) => {
+        {({ form, handleSubmit }) => {
           const disableButton =
             checkingOutCart || addingToCart || cartAmount === 0
           const onStripeChange = e => form.change('stripe', e)
 
           return (
             <React.Fragment>
-              {submitSucceeded && (
+              {checkoutError && (
+                <div className="bg-red-200 border border-red-300 my-4 p-2 rounded text-center text-red-600 text-sm">
+                  {checkoutError}
+                </div>
+              )}
+              {checkoutSuccess && (
                 <div className="bg-green-200 border border-green-300 my-4 p-2 rounded text-center text-green-600 text-sm">
                   Thank you for your order!
                 </div>

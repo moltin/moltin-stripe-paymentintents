@@ -2,11 +2,6 @@
   "name": "moltin-stripe-paymentintents",
   "alias": "moltin-stripe-paymentintents",
   "version": 2,
-  "env": {
-    "MOLTIN_CLIENT_ID": "@demo-moltin-client-id",
-    "MOLTIN_CLIENT_SECRET": "@demo-moltin-client-secret",
-    "STRIPE_SECRET_KEY": "@demo-stripe-secret-test-key"
-  },
   "build": {
     "env": {
       "MOLTIN_CLIENT_ID": "@demo-moltin-client-id",
@@ -17,28 +12,9 @@
     {
       "src": "app/package.json",
       "use": "@now/next"
-    },
-    {
-      "src": "api/handlers/*.js",
-      "use": "@now/node"
     }
   ],
   "routes": [
-    {
-      "src": "/api/authorize",
-      "dest": "/api/handlers/authorize-order.js",
-      "methods": ["POST"]
-    },
-    {
-      "src": "/api/capture",
-      "dest": "/api/handlers/capture-order.js",
-      "methods": ["POST"]
-    },
-    {
-      "src": "/api/intent",
-      "dest": "/api/handlers/create-intent.js",
-      "methods": ["POST"]
-    },
     {
       "src": "/(.*)",
       "dest": "/app/$1"
