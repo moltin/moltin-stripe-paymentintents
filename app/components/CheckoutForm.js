@@ -37,8 +37,7 @@ function CheckoutForm({ stripe }) {
       })
 
       const {
-        client_secret,
-        payment_intent_status,
+        payment_intent: { client_secret, status: payment_intent_status },
         transaction_id
       } = await payForOrder({
         orderId: order_id,
