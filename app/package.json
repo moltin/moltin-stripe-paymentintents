@@ -12,8 +12,8 @@
     "@zeit/next-css": "1.0.1",
     "final-form": "4.18.5",
     "next": "9.0.7",
-    "react": "16.10.0",
-    "react-dom": "16.10.0",
+    "react": "16.10.1",
+    "react-dom": "16.10.1",
     "react-final-form": "6.3.0",
     "react-stripe-elements": "5.0.1"
   },
