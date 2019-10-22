@@ -15,7 +15,7 @@
     "react": "16.10.2",
     "react-dom": "16.10.2",
     "react-final-form": "6.3.0",
-    "react-stripe-elements": "5.0.1"
+    "react-stripe-elements": "5.1.0"
   },
   "devDependencies": {
     "dotenv": "8.2.0",
