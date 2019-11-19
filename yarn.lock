@@ -4764,10 +4764,10 @@ react-error-overlay@5.1.6:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.6.tgz#0cd73407c5d141f9638ae1e0c63e7b2bf7e9929d"
   integrity sha512-X1Y+0jR47ImDVr54Ab6V9eGk0Hnu7fVWGeHQSOXHf/C2pF9c6uy3gef8QUeuUiWlNb0i08InPSE5a/KJzNzw1Q==
 
-react-final-form@6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/react-final-form/-/react-final-form-6.3.1.tgz#d4b72a81892b2ebc46ea053d6b11b361d063ddf8"
-  integrity sha512-UzpAVBLnXRr2GnTP/Z3wjxlFZnfiOnWKNYW2ViK5+6Res0Ehp6vMkBLfaWaoHxSXNCUJtnItM23okAzBINSelg==
+react-final-form@6.3.2:
+  version "6.3.2"
+  resolved "https://registry.yarnpkg.com/react-final-form/-/react-final-form-6.3.2.tgz#2c331540c8f5cbf6fbe75ecd98849a03b34dba6e"
+  integrity sha512-3eXCd9ScouKbf7GJubhUP0s8+aYCsltjjWZtvOKV+E0AeRjXmzQZfUAsKM+395+v1dLIyenB3x22ZQms2tWFRQ==
   dependencies:
     "@babel/runtime" "^7.4.5"
     ts-essentials "^3.0.2"
