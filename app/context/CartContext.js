@@ -150,7 +150,7 @@ function CartProvider({ children }) {
 
   async function payForOrder({ orderId, payment }) {
     const {
-      data: { client_secret, id: transaction_id, payment_intent_status }
+      data: { payment_intent: { client_secret, status, id }, id: transaction_id }
     } = await moltin.post(`orders/${orderId}/payments`, {
       gateway: 'stripe_payment_intents',
       method: 'purchase',

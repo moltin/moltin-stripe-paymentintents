@@ -37,14 +37,14 @@ function CheckoutForm({ stripe }) {
       })
 
       const {
-        payment_intent: { client_secret, status: payment_intent_status },
+        client_secret, status, id,
         transaction_id
       } = await payForOrder({
         orderId: order_id,
         payment
       })
 
-      if (payment_intent_status === 'requires_action') {
+      if (status === 'requires_action') {
         const { error } = await stripe.handleCardAction(client_secret)
 
         if (error)
