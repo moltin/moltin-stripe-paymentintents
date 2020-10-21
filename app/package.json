@@ -14,7 +14,7 @@
     "next": "9.5.5",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "react-final-form": "6.5.1",
+    "react-final-form": "6.5.2",
     "react-stripe-elements": "5.1.0"
   },
   "devDependencies": {
