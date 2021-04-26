@@ -10,7 +10,7 @@
   "dependencies": {
     "@moltin/request": "2.0.2",
     "@zeit/next-css": "1.0.1",
-    "final-form": "4.20.1",
+    "final-form": "4.20.2",
     "next": "9.5.5",
     "react": "16.14.0",
     "react-dom": "16.14.0",
